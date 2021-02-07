@@ -32,7 +32,7 @@ function DrawerRoutes() {
 function App() {
   return (
       <NavigationContainer>
-         <Stack.Navigator>
+         <Stack.Navigator initialRouteName="Login">
             <Stack.Screen name="Home" component={DrawerRoutes}/>
             <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="SignUp" component={SignupScreen}/>
