@@ -13,7 +13,19 @@ class LoginScreen extends Component{
     }
   }
 
-  async storeToken(accessToken){
+  isValid = () => {
+    const {email, password} = this.state
+    if(email == ""){
+      alert("Please enter valid email")
+      return false
+    }else if(password == ""){
+      alert("please enter valid password")
+      return false
+    }
+    return true
+  }
+
+/*  async storeToken(accessToken){
     try{
       await AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
       this.getToken();
@@ -33,9 +45,10 @@ class LoginScreen extends Component{
       console.log("something went wrong")
 
     }
-  }
+  }*/
 
   login = async () => {
+    if(this.isValid()){
     return fetch("http://10.0.2.2:3333/api/1.0.0/user/login",{
         method: 'POST',
         headers: {
@@ -65,6 +78,7 @@ class LoginScreen extends Component{
       console.log(error);
     })
   }
+}
 
   render(){
     return(
@@ -82,15 +96,18 @@ class LoginScreen extends Component{
               secureTextEntry
               style={styles.input}
             />
-            <Button
-               title= "Login"
-               onPress={() => this.login()}
-            />
-            <Button
-              title="Create an Account"
-              color="orange"
-              onPress={() => this.props.navigation.navigate('SignUp')}
-             />
+            <TouchableOpacity
+               style={styles.buttons}
+               onPress={() => this.login()}>
+               <Text> Login </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.buttons1}
+                onPress={() => this.props.navigation.navigate('SignUp')}>
+                <Text>
+                  Create an account
+                </Text>
+             </TouchableOpacity>
       </ScrollView>
     )
 
@@ -108,14 +125,19 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 30,
     margin: 10,
-    borderColor: '#024678'
+    borderColor: '#ff55ee'
   },
   buttons: {
-    justifyContent: "center",
-    textAlign: "center",
+    alignItems: 'center',
     padding: 16,
-    backgroundColor: "#DDDDDD",
-    marginTop: 20
+    backgroundColor: "#ec003e",
+    marginTop: 20,
+  },
+  buttons1: {
+    marginTop: 20,
+    padding: 16,
+    backgroundColor: "#cb1f47",
+    alignItems: 'center',
   },
 });
 

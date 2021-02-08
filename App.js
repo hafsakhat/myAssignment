@@ -13,6 +13,7 @@ import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
 import Reviews from './screens/ViewReviews';
 import Publish from './screens/PublishReview';
+import LogoutScreen from './screens/Logout';
 
 //MOVE HOMESCREEN TO DRAWER
 
@@ -25,6 +26,7 @@ function DrawerRoutes() {
          <Drawer.Screen name="Home" component={HomeScreen}/>
          <Drawer.Screen name="Reviews" component={Reviews}/>
          <Drawer.Screen name="Publish" component={Publish}/>
+         <Drawer.Screen name="Logout" component={LogoutScreen}/>
       </Drawer.Navigator>
   );
 }
@@ -33,7 +35,7 @@ function App() {
   return (
       <NavigationContainer>
          <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Home" component={DrawerRoutes}/>
+            <Stack.Screen name="Home" component={DrawerRoutes} options={{headerShown: false}}/>
             <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="SignUp" component={SignupScreen}/>
         </Stack.Navigator>

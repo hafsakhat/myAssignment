@@ -5,9 +5,9 @@ import { StyleSheet, View, Text, Button, TextInput, TouchableOpacity, ScrollView
 //do form and stuff on this page
 
 class SignupScreen extends Component{
-  constructor() {
-    super();
-     this.state ={
+  constructor(props) {
+    super(props);
+     this.state = {
        first_name: "",
        last_name: "",
        email:"",
@@ -15,8 +15,34 @@ class SignupScreen extends Component{
      }
   }
 
+  validate = () => {
+    const {first_name, last_name, email, password} = this.state
+    let reg = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+    if(first_name == ""){
+      alert("Please fill in your first name")
+      return false
+    }else if(last_name == ""){
+      alert("please fill in your last name")
+      return false
+    }else  if(email == ""){
+      alert("Please enter email")
+      return false
+    }else if(reg.test(email)==false){
+      alert("Please enter valid email")
+      return false
+    }else if(password == ""){
+      alert("Please fill in password")
+      return false
+    }else if(password.length < 5){
+      alert("Password must be 5 or more characters")
+      return false
+    }
+    return true
+}
+
   signup = () => {
-    return fetch("http://10.0.2.2:3333/api/1.0.0/user",{
+    if(this.validate()){
+      return fetch("http://10.0.2.2:3333/api/1.0.0/user",{
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -44,8 +70,9 @@ class SignupScreen extends Component{
     .catch((error) => {
       console.log(error);
     })
-
   }
+}
+
 
   render(){
     return(
@@ -75,10 +102,11 @@ class SignupScreen extends Component{
                secureTextEntry
                style={styles.input}
              />
-             <Button
-                title= "Sign up"
-                onPress={() => this.signup()}
-             />
+             <TouchableOpacity
+                style={styles.buttons}
+                onPress={() => this.signup()}>
+                <Text> Sign Up </Text>
+             </TouchableOpacity>
         </ScrollView>
     )
 
@@ -94,13 +122,13 @@ class SignupScreen extends Component{
       margin:10,
       borderWidth: 2,
       borderRadius: 30,
-      borderColor: '#024678'
+      borderColor: '#ff55ee'
     },
     buttons: {
-      justifyContent: "center",
-      textAlign: "center",
+      alignItems: 'center',
       padding: 16,
-      backgroundColor: "#DDDDDD"
+      backgroundColor: "#cb1f47",
+      marginTop: 20,
     },
   });
 
