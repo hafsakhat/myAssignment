@@ -12,8 +12,9 @@ import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
 import Reviews from './screens/ViewReviews';
-import Publish from './screens/PublishReview';
+import Locations from './screens/Locations';
 import LogoutScreen from './screens/Logout';
+import UserInfo from './screens/UserInfo'
 
 //MOVE HOMESCREEN TO DRAWER
 
@@ -25,7 +26,8 @@ function DrawerRoutes() {
       <Drawer.Navigator initialRouteName="Home">
          <Drawer.Screen name="Home" component={HomeScreen}/>
          <Drawer.Screen name="Reviews" component={Reviews}/>
-         <Drawer.Screen name="Publish" component={Publish}/>
+         <Drawer.Screen name="Locations" component={Locations}/>
+         <Drawer.Screen name="Profile" component={UserInfo}/>
          <Drawer.Screen name="Logout" component={LogoutScreen}/>
       </Drawer.Navigator>
   );

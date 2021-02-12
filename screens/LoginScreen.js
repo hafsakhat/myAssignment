@@ -19,7 +19,7 @@ class LoginScreen extends Component{
       alert("Please enter valid email")
       return false
     }else if(password == ""){
-      alert("please enter valid password")
+      alert("please enter password")
       return false
     }
     return true
@@ -71,6 +71,7 @@ class LoginScreen extends Component{
       .then(async (responseJson) => {
         console.log(responseJson);
         await AsyncStorage.setItem('@session_token', responseJson.token);
+        await AsyncStorage.setItem('@user_id', JSON.stringify(responseJson));
         this.props.navigation.navigate("Home");
 
     })
