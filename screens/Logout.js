@@ -3,38 +3,47 @@ import { View, Text, Button, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LogoutScreen extends Component{
-  logout = () => {
-    /*AsyncStorage.removeItem();
-    this.props.navigation.navigate("Login");
-      //AsyncStorage.getItem('@session_token', responseJson.token);
-      /*return fetch("http://10.0.2.2:3333/api/1.0.0/user/logout",{
+  constructor(props){
+    super(props);
+    this.state = {
+      token:""
+    }
+  }
+
+  logout = async () => {
+      let token = await AsyncStorage.getItem('@session_token');
+      await AsyncStorage.removeItem('@session_token');
+      return fetch("http://10.0.2.2:3333/api/1.0.0/user/logout",{
          method: 'POST',
          headers: {
-           Accept: 'application/json',
-           'Content-Type' : 'application/json',
-            //'X-Authorization': value
-         },
-         //body: JSON.stringify(responseJson)
+            'X-Authorization': token
+         }
        })
        .then((response) => {
-         if(response.status === 200){
-           return response.json()
+         this.props.navigation.navigate("Login");
+         alert("Successfully logged out");
+         console.log('logged out');
+       })
+
+        /* if(response.status === 200){
+            //this.props.navigation.navigate("Login");
+            return response.json;
          }
-         else if(response.status === 401){
+          else if(response.status === 401){
            throw 'Unauthorised';
          }
          else{
            throw 'Something went wrong';
          }
        })
-       .then((response) => {
-         AsyncStorage.clear();
+       .then(async(responseJson)=>{
+         //await AsyncStorage.removeItem('@session_token');
          this.props.navigation.navigate("Login");
 
-     })
-     .catch((error) => {
+       })*/
+       .catch((error) => {
        console.log(error);
-     })*/
+    })
   }
 
 
