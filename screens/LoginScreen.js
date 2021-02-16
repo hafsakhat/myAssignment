@@ -63,6 +63,7 @@ class LoginScreen extends Component{
         }
         else if(response.status === 400){
           throw 'Invalid login';
+          alert("Username or password is incorrect");
         }
         else{
           throw 'Something went wrong';

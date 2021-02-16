@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import { View, Text, Button, ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class HomeScreen extends Component {
@@ -7,10 +7,26 @@ class HomeScreen extends Component {
     super(props);
     this.state = {
       isLoading: true,
-      LocationData:[],
-      favouriteLocation:[]
+      LocationData:[]
+      //favouriteLocation:[]
     }
   }
+
+  /*navigate to page, storing ID in Acynstorage*/
+  /*seeMoreDetails = location_id => {
+    this.storeLocationData(location_id);
+    /*want to pass location_id object and send through item
+    this.props.navigation.navigate('Locations');
+    /*TAKE TO LOCATION PAGE
+  }
+  /*Async storage storing location id
+  async storeLocationData(location_id){
+    try{
+      await AsyncStorage.setItem('@location_id', JSON.stringify(location_id));
+    }catch(error){
+        console.log("something went wrong!")
+      }
+  }*/
 
   componentDidMount(){
     this.unsubscribe = this.props.navigation.addListener('focus',() => {
@@ -90,6 +106,7 @@ class HomeScreen extends Component {
           <FlatList
              data={this.state.LocationData}
              renderItem={({item}) => (
+               <TouchableOpacity onPress={() => this.props.navigation.navigate('Locations', {item})}>
                <View style={styles.item}>
                  <Text style={styles.textStyle}>
                     {item.location_name}
@@ -97,11 +114,8 @@ class HomeScreen extends Component {
                  <Text style={styles.textStyleLocation}>
                     {item.location_town}
                  </Text>
-                 <Button
-                   title="Favourite"
-                   /*onPress={() => this.addFavouriteLocation(item.id)}*/
-                 />
               </View>
+              </TouchableOpacity>
              )}
              keyExtractor={(item,index) => item.location_id.toString()}
           />
@@ -119,7 +133,7 @@ const styles = StyleSheet.create({
     margin: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderBottomColor: 'pink',
   },
   textStyle: {

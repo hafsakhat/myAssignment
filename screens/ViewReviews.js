@@ -15,8 +15,40 @@ class Reviews extends Component{
     }
   }
 
-  addReview = () =>{
-    
+  async storeLocationData(location_id){
+    try{
+      await AsyncStorage.setItem('@location_id', JSON.stringify(locID));
+    }catch(error){
+        console.log("something went wrong!")
+      }
+  }
+
+
+  addReview = async () =>{
+    /*convert to string and pass to body*/
+    let sendReview = {
+      overall_rating: parseInt(this.state.id),
+      price_rating: parseInt(this.state.price_rating),
+      clenliness_rating: parseInt(this.state.clenliness),
+      review_body: this.state.review_body
+    };
+
+    const location_id = await AsyncStorage.getItem('@loation_id');
+    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID + "/review",{
+      method: 'POST',
+      headers:{
+        'Content-Type' : 'application/json',
+        'X-Authorization' : locID
+      },
+      body: JSON.stringify(sendReview)
+    })
+    .then((response) => {
+      alert("review added")
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+
   }
 
   render(){
