@@ -92,11 +92,11 @@ class UserInfo extends Component{
     }else{
       return (
         <View>
-          <Text>User Information</Text>
-          <Text>{this.state.userData.first_name}</Text>
-          <Text>{this.state.userData.last_name}</Text>
-          <Text>{this.state.userData.email}</Text>
-        <Text>Update Profile</Text>
+          <Text style={styles.titleText}>PROFILE</Text>
+          <Text style={styles.infoText}> First Name:  {this.state.userData.first_name}</Text>
+          <Text style={styles.infoText}> Last Name:  {this.state.userData.last_name}</Text>
+          <Text style={styles.infoText}> Email:  {this.state.userData.email}</Text>
+        <Text style={styles.headerText}>Update Profile</Text>
          <ScrollView>
           <TextInput
              placeholder="First Name"
@@ -126,7 +126,7 @@ class UserInfo extends Component{
               <TouchableOpacity
                  style={styles.buttons}
                  onPress={() => this.updateUser()}>
-                 <Text> Update Profile </Text>
+                 <Text style={styles.buttonText}> Update</Text>
               </TouchableOpacity>
          </ScrollView>
         </View>
@@ -144,14 +144,40 @@ const styles = StyleSheet.create({
       margin:10,
       borderWidth: 2,
       borderRadius: 30,
-      borderColor: '#ff55ee'
+      borderColor: '#FF9B71'
     },
     buttons: {
       alignItems: 'center',
       padding: 16,
-      backgroundColor: "#eb3b8b",
+      backgroundColor: "#e84855",
       marginTop: 20,
     },
+    titleText: {
+      fontFamily: 'Roboto',
+      fontWeight: 'bold',
+      fontSize: 30,
+      textAlign: 'center',
+      fontStyle: 'italic',
+      color: '#e84855',
+      backgroundColor: '#FF9B71'
+    },
+    buttonText:{
+      fontSize: 20,
+      color: 'white',
+      fontFamily: 'Roboto'
+    },
+    headerText:{
+      fontFamily: 'Roboto',
+      fontSize: 20,
+      color: '#e84855',
+      textAlign: 'center'
+    },
+    infoText:{
+      textAlign: 'center',
+      fontSize: 16,
+      color: '#4C5962',
+      fontStyle: 'italic',
+    }
 });
 
 

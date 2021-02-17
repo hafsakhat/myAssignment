@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { View, Text, Button, ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 class HomeScreen extends Component {
   constructor(props){
     super(props);
@@ -103,6 +104,7 @@ class HomeScreen extends Component {
     else{
       return(
         <View>
+        <Text style={styles.titleText}>LOCATIONS</Text>
           <FlatList
              data={this.state.LocationData}
              renderItem={({item}) => (
@@ -144,6 +146,15 @@ const styles = StyleSheet.create({
     fontFamily: "Cochin",
     fontSize: 20,
     color: "#474D51",
+  },
+  titleText: {
+    fontFamily: 'Roboto',
+    fontWeight: 'bold',
+    fontSize: 30,
+    textAlign: 'center',
+    fontStyle: 'italic',
+    color: '#e84855',
+    backgroundColor: '#FF9B71'
   }
 })
 

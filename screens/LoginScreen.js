@@ -102,13 +102,12 @@ class LoginScreen extends Component{
             <TouchableOpacity
                style={styles.buttons}
                onPress={() => this.login()}>
-               <Text> Login </Text>
+               <Text style={styles.buttonText}> Login </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={styles.buttons1}
                 onPress={() => this.props.navigation.navigate('SignUp')}>
-                <Text>
-                  Create an account
+                <Text style={styles.infoText}>
+                  Create an Account
                 </Text>
              </TouchableOpacity>
       </ScrollView>
@@ -128,19 +127,30 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 30,
     margin: 10,
-    borderColor: '#ff55ee'
+    borderColor: '#FF9B71'
   },
   buttons: {
     alignItems: 'center',
     padding: 16,
-    backgroundColor: "#ec003e",
+    backgroundColor: "#e84855",
     marginTop: 20,
   },
   buttons1: {
     marginTop: 20,
     padding: 16,
-    backgroundColor: "#cb1f47",
+    backgroundColor: "#e84855",
     alignItems: 'center',
+  },
+  infoText:{
+    textAlign: 'center',
+    fontSize: 16,
+    color: "#e84855",
+    fontStyle: 'italic',
+  },
+  buttonText:{
+    fontSize: 20,
+    color: 'white',
+    fontFamily: 'Roboto'
   },
 });
 

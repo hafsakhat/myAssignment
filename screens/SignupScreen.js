@@ -105,7 +105,7 @@ class SignupScreen extends Component{
              <TouchableOpacity
                 style={styles.buttons}
                 onPress={() => this.signup()}>
-                <Text> Sign Up </Text>
+                <Text style={styles.buttonText}> Sign Up </Text>
              </TouchableOpacity>
         </ScrollView>
     )
@@ -122,13 +122,18 @@ class SignupScreen extends Component{
       margin:10,
       borderWidth: 2,
       borderRadius: 30,
-      borderColor: '#ff55ee'
+      borderColor: '#FF9B71'
     },
     buttons: {
       alignItems: 'center',
       padding: 16,
-      backgroundColor: "#cb1f47",
+      backgroundColor: "#e84855",
       marginTop: 20,
+    },
+    buttonText:{
+      fontSize: 20,
+      color: 'white',
+      fontFamily: 'Roboto'
     },
   });
 
