@@ -155,7 +155,9 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     color: '#e84855',
     backgroundColor: '#FF9B71'
-  }
+  },
+
+
 })
 
 /*const HomeScreens = ({navigation}) => {

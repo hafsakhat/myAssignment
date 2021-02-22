@@ -130,10 +130,14 @@ const styles = StyleSheet.create({
     borderColor: '#FF9B71'
   },
   buttons: {
+    flex: 1,
     alignItems: 'center',
-    padding: 16,
+    padding: 10,
     backgroundColor: "#e84855",
     marginTop: 20,
+    marginLeft: 150,
+    marginRight: 150,
+    borderRadius: 30
   },
   buttons1: {
     marginTop: 20,
@@ -143,14 +147,16 @@ const styles = StyleSheet.create({
   },
   infoText:{
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 18,
     color: "#e84855",
     fontStyle: 'italic',
+    marginTop: 20
   },
   buttonText:{
     fontSize: 20,
     color: 'white',
-    fontFamily: 'Roboto'
+    fontFamily: 'Roboto',
+    marginTop: 1
   },
 });
 

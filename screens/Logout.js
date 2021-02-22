@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, TouchableOpacity} from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LogoutScreen extends Component{
@@ -49,15 +49,36 @@ class LogoutScreen extends Component{
 
   render(){
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Logout</Text>
-        <Button
-          title="logout"
-          onPress={() => this.logout()}
-         />
+      <View>
+        <TouchableOpacity
+          style={styles.buttons}
+          onPress={() => this.logout()}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  buttons: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: "#e84855",
+    marginTop: 20,
+    marginLeft: 150,
+    marginRight: 150,
+    borderRadius: 30
+  },
+  buttonText:{
+    fontSize: 20,
+    color: 'white',
+    fontFamily: 'Roboto',
+    marginTop: 1
+  },
+
+})
 
 export default LogoutScreen;

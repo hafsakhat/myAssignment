@@ -25,7 +25,6 @@ function DrawerRoutes() {
   return (
       <Drawer.Navigator initialRouteName="Home">
          <Drawer.Screen name="Home" component={HomeScreen}/>
-         <Drawer.Screen name="Reviews" component={Reviews} />
          <Drawer.Screen name="Profile" component={UserInfo} options={{headerShown: false}} />
          <Drawer.Screen name="Logout" component={LogoutScreen}/>
       </Drawer.Navigator>
@@ -40,6 +39,7 @@ function App() {
             <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="SignUp" component={SignupScreen}/>
             <Stack.Screen name="Locations" component={Locations}/>
+            <Stack.Screen name="Reviews" component={Reviews}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

@@ -20,9 +20,7 @@ class UserInfo extends Component{
     this.getUserData();
   }
 
-  /*DISPLAY USER DATA IN FlatList? AND THEN DO FORM? AND CHANGE IT IDK*/
- /*HOW DO YOU VIEW A YSER?*/
- /*FIRST NAME LAST NAME AND EMAIL*/
+  
   getUserData = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     const userID = await AsyncStorage.getItem('@user_id');
@@ -126,7 +124,7 @@ class UserInfo extends Component{
               <TouchableOpacity
                  style={styles.buttons}
                  onPress={() => this.updateUser()}>
-                 <Text style={styles.buttonText}> Update</Text>
+                 <Text style={styles.buttonText}> update</Text>
               </TouchableOpacity>
          </ScrollView>
         </View>
@@ -151,6 +149,9 @@ const styles = StyleSheet.create({
       padding: 16,
       backgroundColor: "#e84855",
       marginTop: 20,
+      marginLeft: 150,
+      marginRight: 150,
+      borderRadius: 30
     },
     titleText: {
       fontFamily: 'Roboto',
@@ -170,7 +171,8 @@ const styles = StyleSheet.create({
       fontFamily: 'Roboto',
       fontSize: 20,
       color: '#e84855',
-      textAlign: 'center'
+      textAlign: 'center',
+      marginTop: 20
     },
     infoText:{
       textAlign: 'center',
