@@ -73,21 +73,21 @@ class Reviews extends Component{
 
 
   /*post review for specific location*/
-  addReview = location_id => {
+  addReview = async (location_id) => {
     const{item} = this.props.route.params;
     /*convert to string and pass to body*/
     let sendReview = {
       overall_rating: parseInt(this.state.overall_rating),
       price_rating: parseInt(this.state.price_rating),
       quality_rating: parseInt(this.state.quality_rating),
-      clenliness_rating: parseInt(this.state.clenliness),
+      clenliness_rating: parseInt(this.state.clenliness_rating),
       review_body: this.state.review_body
     };
 
     /*const location = AsyncStorage.getItem('@location_id');*/
     /*const review = AsyncStorage.getItem('@review_id')*/
-    const value = AsyncStorage.getItem('@session_token');
-    const userid = AsyncStorage.getItem('@user_id')
+    const value = await AsyncStorage.getItem('@session_token');
+    const userid = await AsyncStorage.getItem('@user_id')
     return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + location_id + "/review",{
       method: 'POST',
       headers:{
@@ -99,6 +99,7 @@ class Reviews extends Component{
     })
     .then((response) => {
       if(response.status === 201){
+        alert("Review added")
         return response.json()
       }
       else if(response.status === 400){

@@ -14,7 +14,8 @@ import HomeScreen from './screens/HomeScreen';
 import Reviews from './screens/ViewReviews';
 import Locations from './screens/Locations';
 import LogoutScreen from './screens/Logout';
-import UserInfo from './screens/UserInfo'
+import UserInfo from './screens/UserInfo';
+import ProfileUpdate from './screens/updateProfile';
 
 //MOVE HOMESCREEN TO DRAWER
 
@@ -40,6 +41,7 @@ function App() {
             <Stack.Screen name="SignUp" component={SignupScreen}/>
             <Stack.Screen name="Locations" component={Locations}/>
             <Stack.Screen name="Reviews" component={Reviews}/>
+            <Stack.Screen name="Update" component={ProfileUpdate}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

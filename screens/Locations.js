@@ -70,8 +70,8 @@ class Locations extends Component{
   }
 
  /*add to favourite locations*/
-  addFavouriteLocation = location_id => {
-    const value = AsyncStorage.getItem('@session_token');
+  addFavouriteLocation = async (location_id) => {
+    const value = await AsyncStorage.getItem('@session_token');
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + location_id + '/favourite', {
       method: 'POST',
       headers: {
@@ -81,9 +81,7 @@ class Locations extends Component{
      })
       .then((response) => {
         if(response.status === 200){
-          this.setState({
-            favouriteLocation: responseJson
-          })
+          alert("added to favourites")
         }
         else if(response.status === 400){
           throw 'Failed';
@@ -97,15 +95,15 @@ class Locations extends Component{
       })
   }
 
-  likeReview = review_id => {
+  likeReview = async (review_id) => {
     const{item} = this.props.route.params;
-    const value = AsyncStorage.getItem('@session_token');
+    const value = await AsyncStorage.getItem('@session_token');
     const locID = item.location_id.toString();
     return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID + "/review/" + review_id + "/like",{
       method: 'POST',
       headers: {
         'Content-Type' : 'application/json',
-        'X-Authorization' : value
+        'X-Authorization' : String(value)
       },
     })
       .then((response) => {
@@ -161,6 +159,9 @@ class Locations extends Component{
           onPress={() => this.addFavouriteLocation(item.location_id)}>
           <Text style={styles.faveButtonText}> Add to favourites </Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Reviews', {item})}>
+            <Text style={styles.reviewButtonStyle}> Write a review for {item.location_name}</Text>
+          </TouchableOpacity>
           <Text style={styles.textStyle}>Reviews for {item.location_name}</Text>
           <SafeAreaView>
           <FlatList
@@ -182,11 +183,6 @@ class Locations extends Component{
               keyExtractor={(item, index) => item.review_id.toString()}
           />
           </SafeAreaView>
-              <ScrollView>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Reviews', {item})}>
-                    <Text style={styles.reviewButtonStyle}> Write a review for {item.location_name}</Text>
-                  </TouchableOpacity>
-               </ScrollView>
          </View>
       )
     }

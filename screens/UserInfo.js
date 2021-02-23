@@ -7,10 +7,6 @@ class UserInfo extends Component{
     super(props);
     this.state = {
       userData:"",
-      first_name: "",
-      last_name: "",
-      email:"",
-      password:"",
       isLoading: true,
       userID: "",
     }
@@ -20,7 +16,7 @@ class UserInfo extends Component{
     this.getUserData();
   }
 
-  
+
   getUserData = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     const userID = await AsyncStorage.getItem('@user_id');
@@ -47,7 +43,7 @@ class UserInfo extends Component{
     });
   }
 
-  updateUser = async () => {
+  /*updateUser = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     const userID = await AsyncStorage.getItem('@user_id');
     return fetch("http://10.0.2.2:3333/api/1.0.0/user/" + userID,{
@@ -74,7 +70,7 @@ class UserInfo extends Component{
       })
     //})
 
-  }
+  }*/
 
  /*200 RESPONSE BUT DOESNT DISPLAY INFO?*/
   render(){
@@ -91,42 +87,39 @@ class UserInfo extends Component{
       return (
         <View>
           <Text style={styles.titleText}>PROFILE</Text>
-          <Text style={styles.infoText}> First Name:  {this.state.userData.first_name}</Text>
-          <Text style={styles.infoText}> Last Name:  {this.state.userData.last_name}</Text>
-          <Text style={styles.infoText}> Email:  {this.state.userData.email}</Text>
-        <Text style={styles.headerText}>Update Profile</Text>
-         <ScrollView>
-          <TextInput
-             placeholder="First Name"
-             onChangeText={(first_name) => this.setState({first_name})}
-             value={this.state.first_name}
-             style={styles.input}
-           />
-           <TextInput
-              placeholder="Last Name"
-              onChangeText={(last_name) => this.setState({last_name})}
-              value={this.state.last_name}
-              style={styles.input}
-            />
-            <TextInput
-               placeholder="Email"
-               onChangeText={(email) => this.setState({email})}
-               value={this.state.email}
-               style={styles.input}
-             />
-             <TextInput
-                placeholder="Password"
-                onChangeText={(password) => this.setState({password})}
-                value={this.state.password}
-                secureTextEntry
-                style={styles.input}
-              />
-              <TouchableOpacity
-                 style={styles.buttons}
-                 onPress={() => this.updateUser()}>
-                 <Text style={styles.buttonText}> update</Text>
-              </TouchableOpacity>
-         </ScrollView>
+          <Text style={styles.faveButtonText}>Favourite Locations</Text>
+          <FlatList
+           data={this.state.userData.favourite_locations}
+           renderItem={({item}) => (
+             <View>
+               <Text style={styles.textStyles}> {item.location_name}</Text>
+            </View>
+           )}
+           /*keyExtractor={(item,index) => item.user_id.toString()}*/
+           keyExtractor={(item, index) => item.location_id.toString()}
+         />
+
+        <Text style={styles.likeButton}>Liked Reviews</Text>
+        <FlatList
+         data={this.state.userData.liked_reviews}
+         renderItem={({item}) => (
+           <View>
+             <Text style={styles.textStyles}> {item.location.location_name}</Text>
+             <Text style={styles.textStyles}> Overall: {item.review.overall_rating} </Text>
+             <Text style={styles.textStyles}> Price: {item.review.price_rating} </Text>
+             <Text style={styles.textStyles}> Qaulity{item.review.quality_rating} </Text>
+             <Text style={styles.textStyles}> Cleanliness{item.review.clenliness_rating} </Text>
+             <Text style={styles.textStyles}> {item.review.review_body} </Text>
+          </View>
+         )}
+         /*keyExtractor={(item,index) => item.user_id.toString()}*/
+         keyExtractor={(item, index) => item.review.review_id.toString()}
+       />
+      <TouchableOpacity
+        style = {styles.buttons}
+        onPress={() => this.props.navigation.navigate('Update')}>
+        <Text style = {styles.buttonText}>update profile</Text>
+      </TouchableOpacity>
         </View>
       )
     }
@@ -138,20 +131,22 @@ const styles = StyleSheet.create({
       color: 'black',
       paddingLeft: 15,
       paddingRight: 15,
-      marginTop: 20,
+      marginTop: 10,
       margin:10,
       borderWidth: 2,
       borderRadius: 30,
       borderColor: '#FF9B71'
     },
     buttons: {
+      flex:1,
       alignItems: 'center',
-      padding: 16,
+      justifyContent: 'center',
+      padding: 20,
       backgroundColor: "#e84855",
-      marginTop: 20,
-      marginLeft: 150,
-      marginRight: 150,
-      borderRadius: 30
+      marginTop: 25,
+      marginLeft: 120,
+      marginRight: 120,
+      borderRadius: 20
     },
     titleText: {
       fontFamily: 'Roboto',
@@ -179,6 +174,28 @@ const styles = StyleSheet.create({
       fontSize: 16,
       color: '#4C5962',
       fontStyle: 'italic',
+    },
+    faveButtonText:{
+      fontSize: 20,
+      color:'#63B9A1',
+      fontFamily: 'Roboto',
+      paddingLeft: 10,
+      marginTop: 10,
+      fontWeight: 'bold',
+      marginBottom: 5
+    },
+    textStyles: {
+      fontFamily: "Cochin",
+      fontSize: 17,
+      paddingLeft: 10
+    },
+    likeButton:{
+      fontFamily: "Cochin",
+      fontSize: 20,
+      paddingLeft: 10,
+      color: '#AE0707',
+      fontWeight: 'bold',
+      marginTop: 20
     }
 });
 
