@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, FlatList, ActivityIndicator, StyleSheet, TextInput, ScrollView, TouchableOpacity} from 'react-native';
+import { View, Text, Button, FlatList, ActivityIndicator, StyleSheet, TextInput, ScrollView, TouchableOpacity, SafeAreaView, ToastAndroid} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class UserInfo extends Component{
@@ -9,6 +9,7 @@ class UserInfo extends Component{
       userData:"",
       isLoading: true,
       userID: "",
+      location_id:""
     }
   }
 
@@ -43,36 +44,73 @@ class UserInfo extends Component{
     });
   }
 
-  /*updateUser = async () => {
+  removeFaveLoc = async (location_id) => {
     const value = await AsyncStorage.getItem('@session_token');
-    const userID = await AsyncStorage.getItem('@user_id');
-    return fetch("http://10.0.2.2:3333/api/1.0.0/user/" + userID,{
-      method: 'PATCH',
-      headers:{
+    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + location_id + '/favourite', {
+      method: 'DELETE',
+      headers: {
         'Content-Type' : 'application/json',
         'X-Authorization' : value
       },
-      body: JSON.stringify({
-        first_name: this.state.first_name,
-        last_name: this.state.last_name,
-        email: this.state.email,
-        password: this.state.password,
-      })
+    })
+    .then((response) => {
+      this.getUserData();
+    })
+    .then((response) => {
+        ToastAndroid.show('removed from favourites', ToastAndroid.SHORT);
+    })
+    .catch((error) =>{
+      console.log(error);
+    })
+  }
+
+  unlikeReview = async (review_id) => {
+    const value = await AsyncStorage.getItem('@session_token');
+    const locID = item.location_id.toString();
+    //const revID = item.review_id.toString();
+    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID + "/review/" + review_id + "/like",{
+      method: 'DELETE',
+      header:{
+        'Content-Type': 'application/json',
+        'X-Authorization': String(value)
+      }
    })
-      .then((response) => {
-        //this.getUserData();
-        alert("Profile updated")
-        this.getUserData();
-      })
-      .catch((error) => {
-        console.log(error);
-        throw error
-      })
-    //})
+   .then((response) => {
+     this.getUserData();
+   })
+   .then((response) => {
+       alert('removed from likes')
+   })
+  .catch((error) => {
+    console.log(error);
+  })
+}
 
-  }*/
+    delReview= async (review_id) => {
+      const review = this.props.Reviews;
+      const value = await AsyncStorage.getItem('@session_token');
+      const locID = this.props.location_id.toString();
+      const revID = review.review_id.toString();
+      return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID + "/review/" + revID,{
+        method: 'DELETE',
+        header:{
+          'Content-Type': 'application/json',
+          'X-Authorization': String(value)
+        }
+     })
+     .then((response) => {
+       this.getUserData();
+     })
+     .then((response) => {
+         alert('review removed')
+     })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
 
- /*200 RESPONSE BUT DOESNT DISPLAY INFO?*/
+
+
   render(){
     if(this.state.isLoading){
       return(
@@ -85,42 +123,67 @@ class UserInfo extends Component{
       );
     }else{
       return (
-        <View>
+        <ScrollView>
+        <View style = {{marginBottom: '10%', flexGrow: 1}}>
           <Text style={styles.titleText}>PROFILE</Text>
+          <TouchableOpacity
+            style = {styles.buttons}
+            onPress={() => this.props.navigation.navigate('Update')}>
+            <Text style = {styles.buttonText}>update profile</Text>
+          </TouchableOpacity>
           <Text style={styles.faveButtonText}>Favourite Locations</Text>
           <FlatList
            data={this.state.userData.favourite_locations}
+           extraData={this.state}
            renderItem={({item}) => (
-             <View>
-               <Text style={styles.textStyles}> {item.location_name}</Text>
+             <View style={styles.item}>
+               <Text style={styles.textStyles}> {item.location_name}, {item.location_town}</Text>
+               <TouchableOpacity
+                 onPress={() => this.removeFaveLoc(item.location_id)}>
+                 <Text style = {styles.unfavButton}>remove</Text>
+               </TouchableOpacity>
             </View>
            )}
-           /*keyExtractor={(item,index) => item.user_id.toString()}*/
            keyExtractor={(item, index) => item.location_id.toString()}
          />
 
-        <Text style={styles.likeButton}>Liked Reviews</Text>
+        <Text style={styles.likeTitle}>Liked Reviews</Text>
         <FlatList
          data={this.state.userData.liked_reviews}
+         extraData={this.state}
          renderItem={({item}) => (
-           <View>
-             <Text style={styles.textStyles}> {item.location.location_name}</Text>
-             <Text style={styles.textStyles}> Overall: {item.review.overall_rating} </Text>
-             <Text style={styles.textStyles}> Price: {item.review.price_rating} </Text>
-             <Text style={styles.textStyles}> Qaulity{item.review.quality_rating} </Text>
-             <Text style={styles.textStyles}> Cleanliness{item.review.clenliness_rating} </Text>
-             <Text style={styles.textStyles}> {item.review.review_body} </Text>
+           <View style={styles.item}>
+             <Text style={styles.textStylesRating}> {item.location.location_name}</Text>
+             <Text style={styles.textStyles}> Overall: {item.review.overall_rating} {"\n"} Price: {item.review.price_rating}{"\n"} Quality: {item.review.quality_rating}
+              {"\n"} Cleanliness: {item.review.clenliness_rating} {"\n"} Comments: {item.review.review_body}</Text>
+             <TouchableOpacity
+               onPress={() => this.unlikeReview(item.review_id)}>
+               <Text style = {styles.unlikeButton}>remove like</Text>
+             </TouchableOpacity>
           </View>
          )}
-         /*keyExtractor={(item,index) => item.user_id.toString()}*/
          keyExtractor={(item, index) => item.review.review_id.toString()}
        />
-      <TouchableOpacity
-        style = {styles.buttons}
-        onPress={() => this.props.navigation.navigate('Update')}>
-        <Text style = {styles.buttonText}>update profile</Text>
-      </TouchableOpacity>
-        </View>
+       <Text style={styles.reviewTitle}>My Reviews</Text>
+         <FlatList
+          data={this.state.userData.reviews}
+          extraData={this.state}
+          renderItem={({item}) => (
+            <View style={styles.item}>
+              <Text style={styles.textStylesRating}> {item.location.location_name}</Text>
+              <Text style={styles.textStyles}> Overall: {item.review.overall_rating} {"\n"} Price: {item.review.price_rating}{"\n"} Quality: {item.review.quality_rating}
+               {"\n"} Cleanliness: {item.review.clenliness_rating} {"\n"} Comments: {item.review.review_body}</Text>
+              <TouchableOpacity
+                onPress={() => this.delReview(item.review_id)}>
+                <Text style = {styles.removeRevButton}>remove review</Text>
+              </TouchableOpacity>
+           </View>
+          )}
+          /*keyExtractor={(item,index) => item.user_id.toString()}*/
+          keyExtractor={(item, index) => item.review.review_id.toString()}
+        />
+      </View>
+      </ScrollView>
       )
     }
   }
@@ -184,19 +247,57 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginBottom: 5
     },
+    unfavButton:{
+      fontFamily: "Cochin",
+      fontSize: 17,
+      paddingLeft: '80%',
+      color: '#63B9A1',
+    },
     textStyles: {
       fontFamily: "Cochin",
       fontSize: 17,
       paddingLeft: 10
     },
-    likeButton:{
+    textStylesRating: {
+      fontFamily: "Cochin",
+      fontSize: 17,
+      paddingLeft: 10,
+      color: '#e84855'
+    },
+    likeTitle:{
       fontFamily: "Cochin",
       fontSize: 20,
       paddingLeft: 10,
       color: '#AE0707',
       fontWeight: 'bold',
       marginTop: 20
-    }
+    },
+    reviewTitle:{
+      fontFamily: "Cochin",
+      fontSize: 20,
+      paddingLeft: 10,
+      color: "#fb5607",
+      fontWeight: 'bold',
+      marginTop: 20
+    },
+    unlikeButton:{
+      fontFamily: "Cochin",
+      fontSize: 17,
+      paddingLeft: '75%',
+      color: '#AE0707',
+    },
+    removeRevButton:{
+      fontFamily: "Cochin",
+      fontSize: 17,
+      paddingLeft: '65%',
+      color: "#fb5607",
+    },
+    item: {
+      flex: 3,
+      margin: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: 'pink',
+    },
 });
 
 

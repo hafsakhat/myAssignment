@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, Button, TextInput, TouchableOpacity, ScrollView} from 'react-native'
+import { StyleSheet, View, Text, Button, TextInput, TouchableOpacity, ScrollView, ToastAndroid} from 'react-native'
 
 //do client side and api validation
 //do form and stuff on this page
@@ -63,7 +63,7 @@ class SignupScreen extends Component{
       })
       .then((responseJson) => {
         console.log("user created with ID: ", responseJson);
-        //ToastAndroid.show("Account created", ToastAndroid.SHORT);
+        ToastAndroid.show("Account created", ToastAndroid.SHORT);
         this.props.navigation.navigate("Login");
 
     })

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, ScrollView, TextInput, StyleSheet, TouchableOpacity, FlatList, KeyboardAvoidingView, SafeAreaView} from 'react-native';
+import { View, Text, Button, ScrollView, TextInput, StyleSheet, TouchableOpacity, FlatList, KeyboardAvoidingView, SafeAreaView, ToastAndroid} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Locations extends Component{
@@ -81,7 +81,7 @@ class Locations extends Component{
      })
       .then((response) => {
         if(response.status === 200){
-          alert("added to favourites")
+          ToastAndroid.show('added to favourites', ToastAndroid.SHORT);
         }
         else if(response.status === 400){
           throw 'Failed';
@@ -107,7 +107,7 @@ class Locations extends Component{
       },
     })
       .then((response) => {
-        alert("liked")
+        ToastAndroid.show('Added to liked reviews', ToastAndroid.SHORT);
       })
       .catch((error) => {
         console.log(error)
@@ -148,7 +148,7 @@ class Locations extends Component{
     render(){
       const{item} = this.props.route.params;
       return (
-        <View>
+        <View style = {{marginBottom: '20%', flex: 1}}>
           <Text style={styles.titleText}>{item.location_name}</Text>
           <Text style={styles.textStyle}>{item.location_town}</Text>
           <Text style={styles.ratingStyle}>Overall: {item.avg_overall_rating}</Text>
@@ -164,24 +164,25 @@ class Locations extends Component{
           </TouchableOpacity>
           <Text style={styles.textStyle}>Reviews for {item.location_name}</Text>
           <SafeAreaView>
-          <FlatList
-              data={this.state.LocationData.location_reviews}
-              renderItem={({item}) => (
-                <View style={styles.item}>
-                  <Text style={styles.textStyles}>Overall: {item.overall_rating}</Text>
-                  <Text style={styles.textStyles}>Price: {item.price_rating}</Text>
-                  <Text style={styles.textStyles}>Quality: {item.quality_rating}</Text>
-                  <Text style={styles.textStyles}>Cleanliness: {item.clenliness_rating}</Text>
-                  <Text style={styles.textStyles}>Comments: {item.review_body}</Text>
-                  <Text style={styles.textStyles}>Likes: {item.likes}</Text>
-                  <TouchableOpacity
-                    onPress={() => this.likeReview(item.review_id)}>
-                    <Text style = {styles.likeButton}>Like</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              keyExtractor={(item, index) => item.review_id.toString()}
-          />
+            <FlatList
+                data={this.state.LocationData.location_reviews}
+                extraData={this.state}
+                renderItem={({item}) => (
+                  <View style={styles.item}>
+                    <Text style={styles.textStyles}>Overall: {item.overall_rating}</Text>
+                    <Text style={styles.textStyles}>Price: {item.price_rating}</Text>
+                    <Text style={styles.textStyles}>Quality: {item.quality_rating}</Text>
+                    <Text style={styles.textStyles}>Cleanliness: {item.clenliness_rating}</Text>
+                    <Text style={styles.textStyles}>Comments: {item.review_body}</Text>
+                    <Text style={styles.textStyles}>Likes: {item.likes}</Text>
+                    <TouchableOpacity
+                      onPress={() => this.likeReview(item.review_id)}>
+                      <Text style = {styles.likeButton}>Like</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                keyExtractor={(item, index) => item.review_id.toString()}
+            />
           </SafeAreaView>
          </View>
       )
@@ -207,9 +208,10 @@ const styles = StyleSheet.create({
   reviewButtonStyle: {
     fontFamily: "Cochin",
     fontSize: 20,
+    marginBottom: 15,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: "black",
+    color: "#fb5607",
   },
   ratingStyle:{
     fontFamily: "Cochin",
@@ -243,7 +245,7 @@ const styles = StyleSheet.create({
   textStyles: {
     fontFamily: "Cochin",
     fontSize: 17,
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   likeButton:{
     flex: 1,

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Button, ScrollView, TextInput, StyleSheet, TouchableOpacity,ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class Reviews extends Component{
@@ -99,7 +99,7 @@ class Reviews extends Component{
     })
     .then((response) => {
       if(response.status === 201){
-        alert("Review added")
+        ToastAndroid.show('review added', ToastAndroid.SHORT);
         return response.json()
       }
       else if(response.status === 400){
@@ -114,7 +114,6 @@ class Reviews extends Component{
     })
     .then((responseJson) => {
         console.log("review uploaded: ", responseJson);
-        alert("review added")
   })
     .catch((error)=>{
       console.log(error);

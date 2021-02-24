@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet, ToastAndroid} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LogoutScreen extends Component{
@@ -21,7 +21,7 @@ class LogoutScreen extends Component{
        })
        .then((response) => {
          this.props.navigation.navigate("Login");
-         alert("Successfully logged out");
+         ToastAndroid.show('Logged Out', ToastAndroid.SHORT);
          console.log('logged out');
        })
 
