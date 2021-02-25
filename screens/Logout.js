@@ -2,14 +2,17 @@ import React, {Component} from 'react';
 import { View, Text, Button, TouchableOpacity, StyleSheet, ToastAndroid} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class LogoutScreen extends Component{
-  constructor(props){
+/* users can logout of the application and are then redirected to back to the login screen */
+
+class LogoutScreen extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       token:""
     }
   }
 
+  //remove session token and allow user to log out, direct user to login screen
   logout = async () => {
       let token = await AsyncStorage.getItem('@session_token');
       await AsyncStorage.removeItem('@session_token');
@@ -24,23 +27,6 @@ class LogoutScreen extends Component{
          ToastAndroid.show('Logged Out', ToastAndroid.SHORT);
          console.log('logged out');
        })
-
-        /* if(response.status === 200){
-            //this.props.navigation.navigate("Login");
-            return response.json;
-         }
-          else if(response.status === 401){
-           throw 'Unauthorised';
-         }
-         else{
-           throw 'Something went wrong';
-         }
-       })
-       .then(async(responseJson)=>{
-         //await AsyncStorage.removeItem('@session_token');
-         this.props.navigation.navigate("Login");
-
-       })*/
        .catch((error) => {
        console.log(error);
     })
@@ -72,7 +58,7 @@ const styles = StyleSheet.create({
     marginRight: 150,
     borderRadius: 30
   },
-  buttonText:{
+  buttonText: {
     fontSize: 20,
     color: 'white',
     fontFamily: 'Roboto',

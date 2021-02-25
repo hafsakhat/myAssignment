@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import { StyleSheet, View, Text, Button, TextInput, TouchableOpacity, ScrollView} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ACCESS_TOKEN = 'access_token';
+/* This is the page users are first met with, users can access the app by creating an account and logging in */
 
-class LoginScreen extends Component{
-  constructor(props){
+class LoginScreen extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       email:"",
@@ -13,6 +13,7 @@ class LoginScreen extends Component{
     }
   }
 
+  // form validation, to check form fields are not empty
   isValid = () => {
     const {email, password} = this.state
     if(email == ""){
@@ -25,34 +26,12 @@ class LoginScreen extends Component{
     return true
   }
 
-/*  async storeToken(accessToken){
-    try{
-      await AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
-      this.getToken();
-
-    }catch(error){
-      console.log("something went wrong!")
-
-    }
-  }
-
-  async getToken(){
-    try{
-      let token = await AsyncStorage.getItem(ACCESS_TOKEN);
-      console.log("token is: " + token)
-
-    }catch(error){
-      console.log("something went wrong")
-
-    }
-  }*/
-
+  // if form is valid then, allow user to log in, creating a session token and user ID
   login = async () => {
-    if(this.isValid()){
+    if(this.isValid()) {
     return fetch("http://10.0.2.2:3333/api/1.0.0/user/login",{
         method: 'POST',
         headers: {
-          //Accept: 'application/json',
           'Content-Type' : 'application/json'
         },
         body: JSON.stringify(this.state)
@@ -60,22 +39,18 @@ class LoginScreen extends Component{
       .then((response) => {
         if(response.status === 200){
           return response.json()
-        }
-        else if(response.status === 400){
-          throw 'Invalid login';
-          alert("Username or password is incorrect");
-        }
-        else{
-          throw 'Something went wrong';
+        } else if(response.status === 400){
+            throw 'Invalid login';
+            alert("Username or password is incorrect");
+        } else {
+            throw 'Something went wrong';
         }
       })
       .then(async (responseJson) => {
         console.log(responseJson);
         await AsyncStorage.setItem('@session_token', responseJson.token);
         await AsyncStorage.setItem('@user_id', JSON.stringify(responseJson.id));
-        /*ID is int and need to store string in storage, convert back to int?*/
         this.props.navigation.navigate("Home");
-
     })
     .catch((error) => {
       console.log(error);
@@ -83,7 +58,8 @@ class LoginScreen extends Component{
   }
 }
 
-  render(){
+  // form for user input
+  render() {
     return(
       <ScrollView>
           <TextInput
@@ -118,7 +94,7 @@ class LoginScreen extends Component{
 }
 
 const styles = StyleSheet.create({
-  input:{
+  input: {
     flex: 1,
     color: 'black',
     paddingLeft: 15,
@@ -145,36 +121,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#e84855",
     alignItems: 'center',
   },
-  infoText:{
+  infoText: {
     textAlign: 'center',
     fontSize: 18,
     color: "#e84855",
     fontStyle: 'italic',
     marginTop: 20
   },
-  buttonText:{
+  buttonText: {
     fontSize: 20,
     color: 'white',
     fontFamily: 'Roboto',
     marginTop: 1
   },
 });
-
-/*const LoginScreen = ({navigation}) => {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Login Screen</Text>
-      <Button
-        title="Log in"
-        onPress={() => navigation.navigate('Home')}
-      />
-      <Button
-        title="Sign up"
-        onPress={() => navigation.navigate('SignUp')}
-       />
-     </View>
-  );
-};*/
 
 
 export default LoginScreen

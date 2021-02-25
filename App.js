@@ -1,12 +1,11 @@
+/* Navigation layout for the application */
 import 'react-native-gesture-handler';
 
-//import react and component
+//import react and navigators
 import React from 'react';
-//import { View, Text, SafeAreaView, StyleSheet, ScrollView, StatusBar} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator} from '@react-navigation/drawer';
-import { createAppContainer} from '@react-navigation/native';
 
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
@@ -16,8 +15,6 @@ import Locations from './screens/Locations';
 import LogoutScreen from './screens/Logout';
 import UserInfo from './screens/UserInfo';
 import ProfileUpdate from './screens/updateProfile';
-
-//MOVE HOMESCREEN TO DRAWER
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

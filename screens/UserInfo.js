@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import { View, Text, Button, FlatList, ActivityIndicator, StyleSheet, TextInput, ScrollView, TouchableOpacity, SafeAreaView, ToastAndroid} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class UserInfo extends Component{
-  constructor(props){
+/* this page is for information for the users liked reviews, favourite locations and reviews the user has added themselves */
+
+class UserInfo extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       userData:"",
@@ -13,17 +15,17 @@ class UserInfo extends Component{
     }
   }
 
-  componentDidMount(){
+  // mount user information from API call
+  componentDidMount() {
     this.getUserData();
   }
 
-
+  // get user details from API and async storage
   getUserData = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     const userID = await AsyncStorage.getItem('@user_id');
-    /*add validation later*/
-    return fetch("http://10.0.2.2:3333/api/1.0.0/user/" + userID,{
-      headers:{
+    return fetch("http://10.0.2.2:3333/api/1.0.0/user/" + userID, {
+      headers: {
         'Content-Type' : 'application/json',
         'X-Authorization' : value
       }
@@ -31,9 +33,6 @@ class UserInfo extends Component{
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
-        /*first_name: responseJson.first_name,
-        last_name: responseJson.last_name,
-        email: responseJson.email,*/
         isLoading: false,
         userData: responseJson
       })
@@ -44,6 +43,7 @@ class UserInfo extends Component{
     });
   }
 
+  // delete request to remove favourite from list of favourite locations
   removeFaveLoc = async (location_id) => {
     const value = await AsyncStorage.getItem('@session_token');
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + location_id + '/favourite', {
@@ -64,28 +64,30 @@ class UserInfo extends Component{
     })
   }
 
-  unlikeReview = async (review_id) => {
-    const value = await AsyncStorage.getItem('@session_token');
-    const locID = item.location_id.toString();
-    //const revID = item.review_id.toString();
-    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID + "/review/" + review_id + "/like",{
-      method: 'DELETE',
-      header:{
-        'Content-Type': 'application/json',
-        'X-Authorization': String(value)
-      }
-   })
-   .then((response) => {
-     this.getUserData();
-   })
-   .then((response) => {
-       alert('removed from likes')
-   })
-  .catch((error) => {
-    console.log(error);
-  })
+   // delete request to remove from list of liked reviews
+    unlikeReview = async (review_id) => {
+      const value = await AsyncStorage.getItem('@session_token');
+      const locID = item.location_id.toString();
+      //const revID = item.review_id.toString();
+      return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID + "/review/" + review_id + "/like",{
+        method: 'DELETE',
+        header:{
+          'Content-Type': 'application/json',
+          'X-Authorization': String(value)
+        }
+     })
+     .then((response) => {
+       this.getUserData();
+     })
+     .then((response) => {
+         alert('removed from likes')
+     })
+    .catch((error) => {
+      console.log(error);
+    })
 }
 
+    // Delete review that user has added
     delReview= async (review_id) => {
       const review = this.props.Reviews;
       const value = await AsyncStorage.getItem('@session_token');
@@ -110,7 +112,8 @@ class UserInfo extends Component{
   }
 
 
-
+  /* load activity indicator if data has not loaded yet,
+  ** flatlists of user favourite locations, liked reviews, and added reviews */
   render(){
     if(this.state.isLoading){
       return(
@@ -179,7 +182,6 @@ class UserInfo extends Component{
               </TouchableOpacity>
            </View>
           )}
-          /*keyExtractor={(item,index) => item.user_id.toString()}*/
           keyExtractor={(item, index) => item.review.review_id.toString()}
         />
       </View>
@@ -189,7 +191,7 @@ class UserInfo extends Component{
   }
 }
 const styles = StyleSheet.create({
-    input:{
+    input: {
       flex: 1,
       color: 'black',
       paddingLeft: 15,
@@ -220,25 +222,25 @@ const styles = StyleSheet.create({
       color: '#e84855',
       backgroundColor: '#FF9B71'
     },
-    buttonText:{
+    buttonText: {
       fontSize: 20,
       color: 'white',
       fontFamily: 'Roboto'
     },
-    headerText:{
+    headerText: {
       fontFamily: 'Roboto',
       fontSize: 20,
       color: '#e84855',
       textAlign: 'center',
       marginTop: 20
     },
-    infoText:{
+    infoText: {
       textAlign: 'center',
       fontSize: 16,
       color: '#4C5962',
       fontStyle: 'italic',
     },
-    faveButtonText:{
+    faveButtonText: {
       fontSize: 20,
       color:'#63B9A1',
       fontFamily: 'Roboto',
@@ -247,7 +249,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginBottom: 5
     },
-    unfavButton:{
+    unfavButton: {
       fontFamily: "Cochin",
       fontSize: 17,
       paddingLeft: '80%',
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
       paddingLeft: 10,
       color: '#e84855'
     },
-    likeTitle:{
+    likeTitle: {
       fontFamily: "Cochin",
       fontSize: 20,
       paddingLeft: 10,
@@ -272,7 +274,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginTop: 20
     },
-    reviewTitle:{
+    reviewTitle: {
       fontFamily: "Cochin",
       fontSize: 20,
       paddingLeft: 10,
@@ -280,13 +282,13 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginTop: 20
     },
-    unlikeButton:{
+    unlikeButton: {
       fontFamily: "Cochin",
       fontSize: 17,
       paddingLeft: '75%',
       color: '#AE0707',
     },
-    removeRevButton:{
+    removeRevButton: {
       fontFamily: "Cochin",
       fontSize: 17,
       paddingLeft: '65%',
@@ -299,6 +301,5 @@ const styles = StyleSheet.create({
       borderBottomColor: 'pink',
     },
 });
-
 
 export default UserInfo;

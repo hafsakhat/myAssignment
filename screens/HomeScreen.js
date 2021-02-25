@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { View, Text, Button, ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+/* Home screen lists all of the locations of the API, users have to be logged in to access Home screen */
 
 class HomeScreen extends Component {
   constructor(props){
@@ -9,65 +10,43 @@ class HomeScreen extends Component {
     this.state = {
       isLoading: true,
       LocationData:[]
-      //favouriteLocation:[]
     }
   }
 
-  /*navigate to page, storing ID in Acynstorage*/
-  /*seeMoreDetails = location_id => {
-    this.storeLocationData(location_id);
-    /*want to pass location_id object and send through item
-    this.props.navigation.navigate('Locations');
-    /*TAKE TO LOCATION PAGE
-  }
-  /*Async storage storing location id
-  async storeLocationData(location_id){
-    try{
-      await AsyncStorage.setItem('@location_id', JSON.stringify(location_id));
-    }catch(error){
-        console.log("something went wrong!")
-      }
-  }*/
 
-  componentDidMount(){
+/* Location Data displayed when screen is mounted,
+  ** checks to see if user is logged in, if not navigate to the login screen */
+  componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus',() => {
       this.isLoggedIn();
     });
     this.getLocationData();
   }
 
-    componentWillUnmount(){
+    // prevent memory leaks
+  componentWillUnmount() {
       this.unsubscribe();
-    }
+  }
 
-    /*try and send facourites to another page and view as a flatlist?*/
-    /*addFavouriteLocation(id){
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + loc_id + "/favourite", {
-        method: 'POST',
-        headers: {
-          'Content-Type' : 'application/json'
-        }
-      })
-    }*/
 
+    // get the list of locations from API
     getLocationData = async () => {
       const value = await AsyncStorage.getItem('@session_token');
       return fetch("http://10.0.2.2:3333/api/1.0.0/find",{
           method: 'GET',
           headers: {
-            //Accept: 'application/json',
             'Content-Type' : 'application/json',
             'X-Authorization' : value
           }
         })
         .then((response) => {
-          if(response.status === 200){
+          if(response.status === 200) {
             return response.json()
           }
-          else if(response.status === 401){
+          else if(response.status === 401) {
             throw 'Bad Request';
           }
-          else{
+          else {
             throw 'Something went wrong';
           }
         })
@@ -81,8 +60,8 @@ class HomeScreen extends Component {
         console.log(error);
       })
     }
-  //}
 
+  // if user is not logged in navigate to the login screen
   isLoggedIn = async() => {
     const value = await AsyncStorage.getItem('@session_token');
     if(value == null) {
@@ -90,8 +69,11 @@ class HomeScreen extends Component {
     }
   };
 
+  /* load activity indicator if data has not mounted yet,
+  ** Display list of location in a flatlist, each location is clickable
+     and will direct you to the specific location page */
   render(){
-    if(this.state.isLoading){
+    if(this.state.isLoading) {
       return(
         <View>
           <ActivityIndicator
@@ -100,8 +82,7 @@ class HomeScreen extends Component {
           />
         </View>
       );
-    }
-    else{
+    }else {
       return(
         <View>
         <Text style={styles.titleText}>LOCATIONS</Text>
@@ -156,22 +137,8 @@ const styles = StyleSheet.create({
     color: '#e84855',
     backgroundColor: '#FF9B71'
   },
-
-
 })
 
-/*const HomeScreens = ({navigation}) => {
-  render(){
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Home Screen</Text>
-        <Button
-          title="Log out"
-          onPress={() => navigation.navigate('Login')}
-        />
-      </View>
-    )
-  }*/
 
 
 export default HomeScreen;

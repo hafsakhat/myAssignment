@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import { StyleSheet, View, Text, Button, TextInput, TouchableOpacity, ScrollView, ToastAndroid} from 'react-native'
 
-//do client side and api validation
-//do form and stuff on this page
+/* users can create an account with their name, email and password */
 
-class SignupScreen extends Component{
+class SignupScreen extends Component {
   constructor(props) {
     super(props);
      this.state = {
@@ -15,34 +14,40 @@ class SignupScreen extends Component{
      }
   }
 
+  /* validation for signup form,
+  ** checking email is following correct regular expression,
+  ** password is not less than 5 charcters,
+  ** and fields are not empty,
+  ** alert user if input is incorrect */
   validate = () => {
     const {first_name, last_name, email, password} = this.state
     let reg = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
-    if(first_name == ""){
+    if(first_name == "") {
       alert("Please fill in your first name")
       return false
-    }else if(last_name == ""){
+    }else if(last_name == "") {
       alert("please fill in your last name")
       return false
-    }else  if(email == ""){
+    }else  if(email == "") {
       alert("Please enter email")
       return false
-    }else if(reg.test(email)==false){
+    }else if(reg.test(email)==false) {
       alert("Please enter valid email")
       return false
-    }else if(password == ""){
+    }else if(password == "") {
       alert("Please fill in password")
       return false
-    }else if(password.length < 5){
+    }else if(password.length < 5) {
       alert("Password must be 5 or more characters")
       return false
     }
     return true
 }
 
+  // if form validation is ok, then allow user to create a new account, direct them to login page
   signup = () => {
-    if(this.validate()){
-      return fetch("http://10.0.2.2:3333/api/1.0.0/user",{
+    if(this.validate()) {
+      return fetch("http://10.0.2.2:3333/api/1.0.0/user", {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -53,11 +58,9 @@ class SignupScreen extends Component{
       .then((response) => {
         if(response.status === 201){
           return response.json()
-        }
-        else if(response.status === 400){
+        } else if(response.status === 400){
           throw 'Failed validation';
-        }
-        else{
+        } else{
           throw 'Something went wrong';
         }
       })
@@ -74,6 +77,7 @@ class SignupScreen extends Component{
 }
 
 
+  // form input
   render(){
     return(
       <ScrollView>
@@ -113,7 +117,7 @@ class SignupScreen extends Component{
   }
 }
   const styles = StyleSheet.create({
-    input:{
+    input: {
       flex: 1,
       color: 'black',
       paddingLeft: 15,
@@ -129,8 +133,11 @@ class SignupScreen extends Component{
       padding: 16,
       backgroundColor: "#e84855",
       marginTop: 20,
+      marginLeft: 150,
+      marginRight: 150,
+      borderRadius: 30
     },
-    buttonText:{
+    buttonText: {
       fontSize: 20,
       color: 'white',
       fontFamily: 'Roboto'

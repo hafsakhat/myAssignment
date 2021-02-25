@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import { View, Text, Button, ScrollView, TextInput, StyleSheet, TouchableOpacity,ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-class Reviews extends Component{
-  constructor(props){
+/* Users can added a review for the specified location, giving an overall, price, quality and cleanliness rating, with comments */
+
+class Reviews extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      reviewData:[],
       LocationData:[],
       overall_rating:"",
       price_rating:"",
@@ -17,65 +18,11 @@ class Reviews extends Component{
     }
   }
 
-  async storeLocationData(location_id){
-    try{
-      await AsyncStorage.setItem('@location_id', JSON.stringify(location_id));
-    }catch(error){
-        console.log("something went wrong!")
-      }
-  }
 
-  /*validateReview = () => {
-    const {overall_rating, price_rating, quality_rating, clenliness_rating, review_body} = this.state
-    if(overall_rating == "" && overall_rating.length > 5){
-      alert("Please eneter rating between 1 and 5")
-      return false
-    }else if(price_rating == ""){
-      alert("please fill in your last name")
-      return false
-    }else if(quality_rating == ""){
-      alert("Please enter email")
-      return false
-    }else if(clenliness_rating == ""){
-      alert("Please fill in password")
-      return false
-    }
-    return true
-}*/
-
-
-  /*getLocationInfo = location_id => {
-  /*  const location = AsyncStorage.getItem('@location_id');
-    const value = AsyncStorage.getItem('@session_token');
-    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + location_id, {
-      method: 'GET',
-      headers: {
-        //Accept: 'application/json',
-        'Content-Type' : 'application/json',
-        'X-Authorization' : String(value),
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': 0
-      }
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          isLoading: false,
-          LocationData: responseJson
-          /*LocationData: responseJson
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-  }*/
-
-
-  /*post review for specific location*/
+  // post review for specific location
   addReview = async (location_id) => {
     const{item} = this.props.route.params;
-    /*convert to string and pass to body*/
+    // convert to string and pass to body
     let sendReview = {
       overall_rating: parseInt(this.state.overall_rating),
       price_rating: parseInt(this.state.price_rating),
@@ -83,14 +30,11 @@ class Reviews extends Component{
       clenliness_rating: parseInt(this.state.clenliness_rating),
       review_body: this.state.review_body
     };
-
-    /*const location = AsyncStorage.getItem('@location_id');*/
-    /*const review = AsyncStorage.getItem('@review_id')*/
     const value = await AsyncStorage.getItem('@session_token');
     const userid = await AsyncStorage.getItem('@user_id')
     return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + location_id + "/review",{
       method: 'POST',
-      headers:{
+      headers: {
         Accept: 'application/json',
         'Content-Type' : 'application/json',
         'X-Authorization' : String(value)
@@ -98,17 +42,14 @@ class Reviews extends Component{
       body: JSON.stringify(sendReview)
     })
     .then((response) => {
-      if(response.status === 201){
+      if(response.status === 201) {
         ToastAndroid.show('review added', ToastAndroid.SHORT);
         return response.json()
-      }
-      else if(response.status === 400){
+      } else if(response.status === 400) {
         throw 'unable to upload review';
-      }
-      else if(response.status === 401){
+      } else if(response.status === 401) {
         throw 'unable to upload review';
-      }
-      else{
+      } else{
         throw 'Something went wrong';
       }
     })
@@ -120,6 +61,7 @@ class Reviews extends Component{
     })
 }
 
+  /* form to added a new review for location */
   render(){
     const{item} = this.props.route.params;
     return(
@@ -166,7 +108,7 @@ class Reviews extends Component{
 }
 
 const styles = StyleSheet.create({
-  input:{
+  input: {
     flex: 1,
     color: 'black',
     paddingLeft: 15,
@@ -178,7 +120,7 @@ const styles = StyleSheet.create({
     marginRight: 35,
     borderColor: '#FF9B71'
   },
-  reviewInput:{
+  reviewInput: {
     flex: 1,
     color: 'black',
     paddingLeft: 15,
@@ -191,7 +133,7 @@ const styles = StyleSheet.create({
     height: 100,
     marginTop: 10
   },
-  buttonText:{
+  buttonText: {
     fontSize: 20,
     color: "#e84855",
     fontFamily: 'Roboto',

@@ -2,54 +2,36 @@ import React, {Component} from 'react';
 import { View, Text, Button, ScrollView, TextInput, StyleSheet, TouchableOpacity, FlatList, KeyboardAvoidingView, SafeAreaView, ToastAndroid} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class Locations extends Component{
-  constructor(props){
+/* this page is accessed through the home screen, includes the reviews for the location, users
+** can add the location to favourites, like a review and add a review */
+
+class Locations extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
       LocationData: [],
       location_id: "",
-      reviewData:[],
       overall_rating:"",
       price_rating:"",
       quality_rating:"",
       clenliness_rating:"",
       review_body:"",
-      favouriteLocation:""
     }
   }
 
-  async storeLocationData(location){
-    try{
-      await AsyncStorage.setItem('@location_id', JSON.stringify(location));
-    }catch(error){
-        console.log("something went wrong!")
-      }
-  }
-  async storeReviewData(review){
-    try{
-      await AsyncStorage.setItem('@review_id', JSON.stringify(review));
-    }catch(error){
-        console.log("something went wrong!")
-      }
-  }
-
-
-
-  componentDidMount(){
+  //mount location information for specified location
+  componentDidMount() {
     const{item} = this.props.route.params;
-    console.log("mounted")
     this.getLocationInfo(item.location_id);
   }
 
- /*GET request to get location info*/
+ // get location reviews for specified location from the API
   getLocationInfo = location_id => {
-  /*  const location = AsyncStorage.getItem('@location_id');*/
     const value = AsyncStorage.getItem('@session_token');
     return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + location_id, {
       method: 'GET',
       headers: {
-        //Accept: 'application/json',
         'Content-Type' : 'application/json',
         'X-Authorization' : String(value),
         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -69,7 +51,7 @@ class Locations extends Component{
       })
   }
 
- /*add to favourite locations*/
+ // add location to list of favourite locations
   addFavouriteLocation = async (location_id) => {
     const value = await AsyncStorage.getItem('@session_token');
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + location_id + '/favourite', {
@@ -80,21 +62,21 @@ class Locations extends Component{
       },
      })
       .then((response) => {
-        if(response.status === 200){
+        if(response.status === 200) {
           ToastAndroid.show('added to favourites', ToastAndroid.SHORT);
-        }
-        else if(response.status === 400){
+        }else if(response.status === 400){
           throw 'Failed';
-        }
-        else{
+        }else{
           throw 'Something went wrong';
         }
       })
-      .catch((error) =>{
+      .catch((error) => {
         console.log(error);
       })
   }
 
+
+  // like a review
   likeReview = async (review_id) => {
     const{item} = this.props.route.params;
     const value = await AsyncStorage.getItem('@session_token');
@@ -114,37 +96,10 @@ class Locations extends Component{
       })
   }
 
-  /*Get post review for that location*/
-  /*addReview = location_id => {
-    const{item} = this.props.route.params;
-    /*convert to string and pass to body
-    let sendReview = {
-      overall_rating: parseInt(this.state.id),
-      price_rating: parseInt(this.state.price_rating),
-      clenliness_rating: parseInt(this.state.clenliness),
-      review_body: this.state.review_body
-    };
 
-    /*const location = AsyncStorage.getItem('@location_id');*/
-    /*const review = AsyncStorage.getItem('@review_id')*
-    const value = AsyncStorage.getItem('@session_token');
-    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + location_id + "/review",{
-      method: 'POST',
-      headers:{
-        'Content-Type' : 'application/json',
-        'X-Authorization' : value
-      },
-      body: JSON.stringify(sendReview)
-    })
-    .then((response) => {
-      this.getLocationInfo(item.location_id);
-      alert("review added")
-    })
-    .catch((error)=>{
-      console.log(error);
-    })
-
-  }*/
+    /* display average ratings for locations,
+    ** and reviews for the location in a flatlist
+    ** Options to add to list of favourite locations, like a review and add a review */
     render(){
       const{item} = this.props.route.params;
       return (
@@ -213,7 +168,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: "#fb5607",
   },
-  ratingStyle:{
+  ratingStyle: {
     fontFamily: "Cochin",
     fontSize: 18,
     textAlign: 'center',
@@ -226,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e84855",
     marginTop: 20,
   },
-  faveButtonText:{
+  faveButtonText: {
     fontSize: 20,
     color:'#63B9A1',
     fontFamily: 'Roboto',
@@ -256,7 +211,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   }
 })
-
-
 
 export default Locations;

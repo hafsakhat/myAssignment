@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import { View, Text, Button, FlatList, ActivityIndicator, StyleSheet, TextInput, ScrollView, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class ProfileUpdate extends Component{
-  constructor(props){
+/* users can update their profile, using their name, email and password */
+
+class ProfileUpdate extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       userData:"",
@@ -16,10 +18,16 @@ class ProfileUpdate extends Component{
     }
   }
 
-  componentDidMount(){
+  // mount user data from API call
+  componentDidMount() {
     this.getUserData();
   }
 
+  /* validation for update form,
+  ** checking email is following correct regular expression,
+  ** password is not less than 5 charcters,
+  ** and fields are not empty,
+  ** alert user if input is incorrect */
   validateUpdate = () => {
     const {first_name, last_name, email, password} = this.state
     let reg = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
@@ -45,22 +53,19 @@ class ProfileUpdate extends Component{
     return true
 }
 
+  // get user details and token from API and async storage
   getUserData = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     const userID = await AsyncStorage.getItem('@user_id');
-    /*add validation later*/
-    return fetch("http://10.0.2.2:3333/api/1.0.0/user/" + userID,{
-      headers:{
+    return fetch("http://10.0.2.2:3333/api/1.0.0/user/" + userID, {
+      headers: {
         'Content-Type' : 'application/json',
         'X-Authorization' : value
       }
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      this.setState({
-        /*first_name: responseJson.first_name,
-        last_name: responseJson.last_name,
-        email: responseJson.email,*/
+      this.setState ({
         isLoading: false,
         userData: responseJson
       })
@@ -71,6 +76,7 @@ class ProfileUpdate extends Component{
     });
   }
 
+  // Patch request to update user details in JSON format
   updateUser = async () => {
       if(this.validateUpdate()){
       const value = await AsyncStorage.getItem('@session_token');
@@ -99,7 +105,9 @@ class ProfileUpdate extends Component{
     }
 }
 
-  render(){
+  /* load activity indicator if data has not loaded yet,
+  ** form for users to update user details */
+  render() {
     if(this.state.isLoading){
       return(
         <View>
@@ -109,7 +117,7 @@ class ProfileUpdate extends Component{
           />
         </View>
       );
-    }else{
+    }else {
     return(
       <View>
           <Text style={styles.titleText}> UPDATE PROFILE</Text>
@@ -155,7 +163,7 @@ class ProfileUpdate extends Component{
 }
 
 const styles = StyleSheet.create({
-  input:{
+  input: {
     flex: 1,
     color: 'black',
     paddingLeft: 15,
@@ -186,19 +194,19 @@ const styles = StyleSheet.create({
     color: '#e84855',
     backgroundColor: '#FF9B71'
   },
-  buttonText:{
+  buttonText: {
     fontSize: 15,
     color: 'white',
     fontFamily: 'Roboto'
   },
-  headerText:{
+  headerText: {
     fontFamily: 'Roboto',
     fontSize: 20,
     color: '#e84855',
     textAlign: 'center',
     marginTop: 20
   },
-  infoText:{
+  infoText: {
     textAlign: 'center',
     fontSize: 16,
     color: '#4C5962',
